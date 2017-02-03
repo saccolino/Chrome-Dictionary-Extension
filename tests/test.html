@@ -1,0 +1,286 @@
+<html>
+
+<head>
+   
+
+    <style>
+        #dx-popup {
+            background-color: #737373;
+            z-index: 2147483647;
+            border: 1px solid #737373;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: normal;
+            padding: 9px;
+            position: absolute;
+            width: 400px;
+            position: absolute;
+            visibility: hidden;
+        }
+        
+        #dx-popup-word-row {
+            margin-bottom: 9px
+        }
+        
+        #dx-popup-word,
+        #dx-popup-audio-icon-uk,
+        #dx-popup-uk-iap,
+        #dx-popup-audio-icon-us,
+        #dx-popup-us-iap {
+            display: inline-block;
+            height: 20px;
+            vertical-align: top
+        }
+        
+        #dx-popup-word {
+            font-size: 16px;
+            font-weight: bold
+        }
+        
+        #dx-popup-audio-icon-uk {
+            background-image: url("uk32.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            margin-left: 8px;
+            width: 32px
+        }
+        
+        #dx-popup-audio-icon-us {
+            background-image: url("us32.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            margin-left: 8px;
+            width: 32px
+        }
+        
+        #dx-popup-meaning {
+            line-height: 1.4
+        }
+        
+        #dx-popup-more {
+            font-size: 12px;
+            line-height: 1.3;
+            margin-top: 9px
+        }
+        
+        #dx-popup-more a {
+            float: right;
+            word-break: break-all
+        }
+        
+        #dx-popup::before {
+            content: "";
+            position: absolute;
+            top: -35%;
+            left: 50%;
+            margin-left: -7px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: transparent transparent #737373;
+            visibility: hidden;
+        }
+        
+        #dx-popup::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -7px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: #737373 transparent transparent transparent;
+            visibility: hidden;
+        }
+        
+        .show {
+            visibility: visible !important;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+        }
+        
+        .showAfter::after {
+            visibility: visible !important;
+        }
+        
+        .showBefore::before {
+            visibility: visible !important;
+        }
+        /* Add animation (fade in the popup) */
+        
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+     <script src="jquery-3.1.1.min.js"> </script>
+    </head>
+<body>
+  <div>
+    <div id="dx-popup">
+           <div id="dx-popup-word-row" class="">
+            <div id="dx-popup-word"></div>
+            <div id="dx-popup-audio-icon-uk" data-sound=""></div>
+            <div id="dx-popup-uk-iap">
+            </div>
+            <div id="dx-popup-audio-icon-us" data-sound=""></div>
+            <div id="dx-popup-us-iap">
+            </div>
+        </div>
+        <div id="dx-popup-meaning">
+            A global computer network providing a variety of information and communication facilities, consisting of interconnected
+            networks using standardized communication protocols.
+       </div>
+         <!--<div id="dx-popup-more" class=""><a target="_blank" href="https://www.google.com/search?q=define+internet">More</a></div>-->
+    </div>
+
+    <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+        it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+        Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
+        Ipsum. verybigwordkblablabla</p>
+        <img src="uk.png"/>
+</div>
+
+</body>
+<script>
+    function search(word, callback)
+{
+       $.get( "http://dictionary.cambridge.org/dictionary/english/" + word, function( data ) {
+
+       var result = $(data);
+       
+       var word = result.find(".headword:first").text();
+        console.log(word);
+
+       var ukMp3url = result.find('span[pron-region="UK"] span')[2].getAttribute('data-src-mp3');
+       var usMp3url = result.find('span[pron-region="US"] span')[2].getAttribute('data-src-mp3');
+   
+        var ukIap = result.find('span[pron-region=UK] span.ipa:first').html();
+       console.log(ukIap);
+
+        var usIap = result.find('span[pron-region=US] span.ipa:first').html();
+        console.log(usIap);
+
+        var definition = result.find('p.def-head b:first').text().trim();
+        definition =  definition.substring(0, definition.length - 1);
+         console.log(definition);
+
+         callback({
+            'word': word,
+            'ukMp3url': ukMp3url,
+            'ukIpa': ukIap,
+            'usMp3url': usMp3url,
+            'usIpa': usIap,
+            'definition' : definition
+         });
+       });
+}
+
+    var body = document.getElementsByTagName("BODY")[0]; 
+    body.addEventListener("mouseup",function(){ 
+       // hide();
+        var selection = window.getSelection();
+        if (selection.isCollapsed) return; 
+        
+        var rect = selection.getRangeAt(0).getBoundingClientRect();
+        var strSelected = selection.toString().trim(); 
+        
+        search(strSelected, function(result)
+        {
+            show(rect,result);
+        });      
+
+        console.log(strSelected); 
+    });
+      document.getElementById("dx-popup-audio-icon-uk")
+      .addEventListener('mouseover' , function(e){
+          var sound = e.target.getAttribute('data-sound')
+           new Audio(sound).play();
+      });
+       document.getElementById("dx-popup-audio-icon-us")
+      .addEventListener('mouseover' , function(e){
+           var sound = e.target.getAttribute('data-sound')
+           new Audio(sound).play();
+      });
+
+var afterBefore = null;
+    
+    function fill(result)
+    {
+        var word = document.getElementById("dx-popup-word");
+        word.innerText = result.word;
+       var definition = document.getElementById("dx-popup-meaning");
+       definition.innerText = result.definition;
+       document.getElementById("dx-popup-audio-icon-uk").setAttribute('data-sound',result.ukMp3url);
+       document.getElementById("dx-popup-uk-iap").innerHTML = result.ukIpa;
+
+       document.getElementById("dx-popup-audio-icon-us").setAttribute('data-sound',result.usMp3url);
+       document.getElementById("dx-popup-us-iap").innerHTML = result.usIpa;
+    }
+   
+    function show(rect, result)
+    {
+        fill(result);
+
+        var popup = document.getElementById("dx-popup");
+        var showAfter = true;
+        var topMargin = 7;
+        var top =  rect.top - popup.clientHeight - topMargin - 2;
+        
+        if (top <= 5)
+        {
+            showAfter = false;
+            top = rect.bottom + topMargin;
+        }
+
+        var left = ((rect.left + rect.right) / 2) - popup.clientWidth / 2;
+        if (left <= 5)
+        {
+            left = 5;
+            showAfter = undefined;
+        }
+
+        popup.style.top = top;
+        popup.style.left = left;
+        
+       
+        popup.classList.add("show");
+       
+        if (showAfter === undefined)
+            return; //don't show the arrow, todo: check how to move the arrow, probably I have to modify to div and remove ::after and ::before
+        else if (showAfter)
+            popup.classList.add("showAfter");
+        else
+            popup.classList.add("showBefore");
+    }
+    function hide()
+    {
+        var popup = document.getElementById("dx-popup");
+        popup.classList.remove("show");
+        popup.classList.remove("showAfter");
+        popup.classList.remove("showBefore");
+    }
+
+
+</script>
+
+</html>
