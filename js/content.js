@@ -62,14 +62,16 @@
         var popup = document.getElementById("dx-popup");
         var showAfter = true;
         var topMargin = 7;
-        var top = rect.top - popup.clientHeight - topMargin - 2;
+        var scrollTop = $(window).scrollTop();
+        var top = scrollTop + rect.top - popup.clientHeight - topMargin - 2;
 
         if (top <= 5) {
             showAfter = false;
             top = rect.bottom + topMargin;
         }
 
-        var left = ((rect.left + rect.right) / 2) - popup.clientWidth / 2;
+        var scrollLeft = $(window).scrollLeft() ;
+        var left = scrollLeft + ((rect.left + rect.right) / 2) - popup.clientWidth / 2;
         if (left <= 5) {
             left = 5;
             showAfter = undefined;

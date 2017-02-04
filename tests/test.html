@@ -41,7 +41,7 @@
         }
         
         #dx-popup-audio-icon-uk {
-            background-image: url("uk32.png");
+            background-image: url("../images/uk32.png");
             background-position: center;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -50,7 +50,7 @@
         }
         
         #dx-popup-audio-icon-us {
-            background-image: url("us32.png");
+            background-image: url("../images/us32.png");
             background-position: center;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -130,7 +130,7 @@
             }
         }
     </style>
-     <script src="jquery-3.1.1.min.js"> </script>
+     <script src="../js/jquery-3.1.1.min.js"> </script>
     </head>
 <body>
   <div>
@@ -157,7 +157,31 @@
         remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
         Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
         Ipsum. verybigwordkblablabla</p>
-        <img src="uk.png"/>
+        <div>
+            Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+        it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+        Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
+        Ipsum. verybigwordkblablabla</p>
+        </div>
+         <div>
+            Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+        it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+        Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
+        Ipsum. verybigwordkblablabla</p>
+        </div>
+         <div>
+            Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+        it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+        Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
+        Ipsum. verybigwordkblablabla</p>
+        </div>
+       
 </div>
 
 </body>
@@ -169,7 +193,11 @@
        var result = $(data);
        
        var word = result.find(".headword:first").text();
+
         console.log(word);
+
+        if (!word)
+         return;
 
        var ukMp3url = result.find('span[pron-region="UK"] span')[2].getAttribute('data-src-mp3');
        var usMp3url = result.find('span[pron-region="US"] span')[2].getAttribute('data-src-mp3');
@@ -206,7 +234,8 @@
         
         search(strSelected, function(result)
         {
-            show(rect,result);
+            if (result)
+              show(rect,result);
         });      
 
         console.log(strSelected); 
@@ -244,15 +273,18 @@ var afterBefore = null;
         var popup = document.getElementById("dx-popup");
         var showAfter = true;
         var topMargin = 7;
-        var top =  rect.top - popup.clientHeight - topMargin - 2;
+        var scrollTop = $(window).scrollTop();
+        var top = scrollTop + rect.top - popup.clientHeight - topMargin - 2;
         
+
         if (top <= 5)
         {
             showAfter = false;
             top = rect.bottom + topMargin;
         }
 
-        var left = ((rect.left + rect.right) / 2) - popup.clientWidth / 2;
+        var scrollLeft = $(window).scrollLeft() ;
+        var left = scrollLeft + ((rect.left + rect.right) / 2) - popup.clientWidth / 2;
         if (left <= 5)
         {
             left = 5;
